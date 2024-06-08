@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <title>{% block title %}Sistema votación{% endblock %}</title>
+    {% if request.path == '/votarPagina' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='votacion.css') }}">
+    {% endif %}
+</head>
+<body>
+    {% include 'components/navbar.html' %}
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+    <script src="{{ url_for('static', filename='bootstrap/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/bootstrap.min.js') }}"></script>
+</body>
+</html>
+    

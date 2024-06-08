@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Votar{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+    <form action="presidencia.html">
+        <h4>PORTAL DE VOTACIÓN ELECTRÓNICA</h4>
+        <div class="input-box">
+            <input type="text" placeholder="Clave de elector" required>
+            <i class='bx bxs-user' ></i>
+        </div>
+        <div class="input-box">
+            <select name="entidad">
+                <option value="" selected disabled>Entidad federativa</option>
+                <option value="Aguascalientes">Aguascalientes</option>
+                <option value="Baja California">Baja California</option>
+            </select>
+        </div>
+        <div class="input-box">
+            <select name="distrito">
+                <option value="" selected disabled>Distrito</option>
+                <option value="1">Distrito 1</option>
+                <option value="2">Distrito 2</option>
+                <!-- Agrega más opciones según sea necesario -->
+            </select>
+        </div>
+        <div class="input-box">
+            <select name="seccion">
+                <option value="" selected disabled>Sección</option>
+                <option value="1">Sección 1</option>
+                <option value="2">Sección 2</option>
+                <option value="3">Sección 3</option>
+                <option value="4">Sección 4</option>
+                <option value="5">Sección 5</option>
+                <!-- Agrega más opciones según sea necesario -->
+            </select>
+        </div>
+        <button type="submit" class="btn">Entrar</button>
+    </form>
+</div>
+{% endblock %}
