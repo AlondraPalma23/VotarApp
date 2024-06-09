@@ -18,6 +18,10 @@ def votarPagina():
 def resultadosPagina():
     return render_template('resultados.html')
 
+@app.route('/Presidencia')
+def Presidencia():
+    return render_template('presidencia.html')
+
 # ENDPOINTS
 @app.route('/users', methods=['GET'])
 def get_users():
