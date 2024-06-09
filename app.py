@@ -22,6 +22,8 @@ def resultadosPagina():
 def Presidencia():
     return render_template('presidencia.html')
 
+# TEMPLES de los usuarios
+
 @app.route('/FuncionarioLogin')
 def funcionario():
     return render_template('funcionarioCasilla.html')
