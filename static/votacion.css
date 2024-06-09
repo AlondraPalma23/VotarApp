@@ -8,6 +8,7 @@
 }
 
 body {
+    padding-top: 56px; /* Ajusta este valor según la altura de tu navbar */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,9 +18,8 @@ body {
     background-position: center;
 }
 
-
 .wrapper {
-    width: 410px;
+    width: 400px;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .2);
     backdrop-filter: blur(20px);
