@@ -1,6 +1,16 @@
 from flask import Flask, jsonify, request, render_template
+from bson.json_util import dumps
 from flask_cors import CORS
 from Database.conexiondb import conexiondb
+from Funcions.Votante import Votante
+from Funcions.Casilla import Casilla
+from Funcions.Voto import VotoDAO
+from Funcions.Partido import Partido
+from Funcions.Users import Users
+from Funcions.CandidatoPre import CandidatoPre
+from Funcions.Estado import Estado
+from datetime import date
+import base64
 
 app = Flask(__name__)
 CORS(app)
@@ -32,18 +42,125 @@ def funcionario():
 def administrador():
     return render_template('homeadmi.html')
 
-# ENDPOINTS
-@app.route('/users', methods=['GET'])
+
+# ENDPOINTS ----------------------------------------------
+# VOTOS
+@app.route('/check_voto', methods=['POST'])
+def check_voto():
+    db = Votante()
+    data = request.get_json()
+    votante = db.get_one_votante(data['claveElec'])
+    if votante:
+        return jsonify({"status": votante[4] == 1})
+    else:
+        result = db.create_votante("Anonimo", data['claveElec'], data['id_estado'], 0, data['seccion'])
+        return jsonify({"status": False, "message": result})  
+
+@app.route('/votar', methods=['POST'])
+def votar():
+    casilla = Casilla()
+    db = VotoDAO()
+    data = request.get_json()
+    resultCasilla = casilla.check_casilla_exists(data['seccion'], data['id_estado'])
+    if not resultCasilla:
+        return jsonify({"status": False, "message": "Casilla no existe."})
+    resultVoto = db.insert_voto(date.today(), data['id_candPre'], resultCasilla[0])
+    if resultVoto:
+        votante = Votante()
+        result = votante.update_bandera(data['claveElec'])
+        if result:
+            return jsonify({"status": True, "message": "Voto exitoso."})
+    else:
+        return jsonify({"status": False, "message": resultVoto})
+
+@app.route('/votes_per_candidate', methods=['GET'])
+def votes_per_candidate():
+    db = conexiondb()
+    candidato = CandidatoPre()
+    query = 'SELECT Id_CandPre, COUNT(*) as votes FROM Voto GROUP BY Id_CandPre'
+    results = db.execute_query(query).fetchall()
+    json = []
+    for result in results:
+        candidato_data = candidato.get_one_candidato_pre(result[0])
+        json.append({
+            'nombre': candidato_data[1],
+            'total': result[1]
+        })
+    return jsonify({"status": True, 'message': 'GET votes per candidate', 'data': json })
+
+@app.route('/estados', methods=['GET'])
+def get_estados():
+    db = Estado()
+    estados = db.get_estados()
+    return jsonify({"status": True, 'message': 'GET votes per candidate', 'data': estados })
+
+# CANDIDATOS
+@app.route('/candidatos', methods=['GET'])
+def get_candidatos():
+    db = CandidatoPre()
+    partido_instance = Partido()  # Create an instance of the Partido class
+    results = db.get_all_candidato_pre()
+    json_result = []
+    
+    for row in results:
+        # Convertir imagen a base64
+        imagen_base64 = base64.b64encode(row[4]).decode('utf-8')
+        partido = partido_instance.get_one_Partido(row[2])  # Get the partido object based on the Id_Part
+        imagenPart_base64 = base64.b64encode(partido[2]).decode('utf-8')
+        
+        candidato = {
+            'Id_CandPre': row[0],
+            'nombreComp': row[1],
+            'partido': partido[3],  # Add the partido object to the candidatso dictionary
+            'descripcion': row[3],
+            'imagen': imagen_base64,
+            'imagenPart': imagenPart_base64
+        }
+        json_result.append(candidato)
+
+    return jsonify({"status": True, 'message': 'GET candidatos', 'data': json_result})
+
+# PARTISOS
+@app.route('/partidos', methods=['GET'])
+def get_partidos():
+    db = Partido()
+    rows = db.get_Partidos()
+    return jsonify({"status": True, 'message': 'GET partidos', 'data': rows})
+
+@app.route('/add_partido', methods=['POST'])
+def add_partido():
+    db = Partido()
+    data = request.get_json()
+    result = db.create_Partido(data['nombre'], data['siglas'], data['imagen'])
+    if result == True:
+        return jsonify({"status": True, "message": "Partido added successfully."})
+    else:
+        return jsonify({"status": False, "message": result})
+
+@app.route('/partido/<int:id>', methods=['DELETE'])
+def delete_partido(id):
+    db = Partido()
+    result = db.delete_Partido(id)
+    if result:
+        return jsonify({"status": True, "message": "Partido deleted successfully."})
+    else:
+        return jsonify({"status": False, "message": result})
+#USERS
+@app.route('/officials', methods=['GET'])
 def get_users():
     db = conexiondb()
-    rows = db.fetch_all_as_dict("SELECT * FROM users")
+    rows = db.fetch_all_as_dict("SELECT * FROM users WHERE rol = 1")
     return jsonify({"status": True, 'message': 'GET users', 'data': rows})
 
-@app.route('/votante', methods=['GET'])
-def get_votante():
-    db = conexiondb()
-    rows = db.fetch_all_as_dict("SELECT * FROM votante")
-    return jsonify({"status": True, 'message': 'GET votante', 'data': rows})
+@app.route('/add_official', methods=['POST'])
+def add_user():
+    db = Users()
+    data = request.get_json()
+    result = db.insert_user(data['name'], 1, data['password'], data['Id_Casilla'])
+    if result == True:
+        return jsonify({"status": True, "message": "User added successfully."})
+    else:
+        return jsonify({"status": False, "message": result})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
