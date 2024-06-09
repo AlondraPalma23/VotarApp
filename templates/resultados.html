@@ -3,8 +3,8 @@
 {% block title %}Resultados{% endblock %}
 
 {% block content %}
-    <h1>Resultados Page</h1>
-    <p>Welcome to the results page.</p>
+    <h1>Resultados</h1>
+
     <canvas id="Chart"></canvas>
     <script src="{{ url_for('static', filename='chart.js') }}"></script>
     <script>
@@ -15,7 +15,7 @@
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Option 1', 'Option 2', 'Option 3'],
+                labels: ['PAN', 'PRI', 'MORENA'],
                 datasets: [{
                     label: 'Votes',
                     data: [10, 5, 8],

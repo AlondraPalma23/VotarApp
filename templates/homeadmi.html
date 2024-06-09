@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+
+<!-- Formulario para dar de alta funcionarios de casilla -->
+<form action="{{ url_for('add_official') }}" method="POST">
+    <input type="text" name="username" placeholder="Nombre de usuario" required>
+    <input type="password" name="password" placeholder="Contraseña" required>
+    <button type="submit">Agregar Funcionario</button>
+</form>
+
+<!-- Formulario para dar de alta partidos políticos y candidatos -->
+<form action="{{ url_for('add_partido') }}" method="POST">
+    <input type="text" name="nombre" placeholder="Nombre del partido" required>
+    <input type="text" name="candidato" placeholder="Nombre del candidato" required>
+    <button type="submit">Agregar Partido</button>
+</form>
+
+{% endblock %}

@@ -22,6 +22,14 @@ def resultadosPagina():
 def Presidencia():
     return render_template('presidencia.html')
 
+@app.route('/FuncionarioLogin')
+def funcionario():
+    return render_template('funcionarioCasilla.html')
+
+@app.route('/Admi')
+def administrador():
+    return render_template('homeadmi.html')
+
 # ENDPOINTS
 @app.route('/users', methods=['GET'])
 def get_users():

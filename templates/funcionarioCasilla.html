@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Official Dashboard{% endblock %}
+{% block content %}
+<h1>Official Dashboard</h1>
+<!-- Formulario para capturar los datos del acta de casilla -->
+<form action="{{ url_for('add_acta') }}" method="POST">
+    <label for="partido">Partido:</label>
+    <input type="text" id="partido" name="partido" required>
+    <label for="votos">Votos:</label>
+    <input type="number" id="votos" name="votos" required>
+    <button type="submit">Agregar Acta</button>
+</form>
+{% endblock %}
