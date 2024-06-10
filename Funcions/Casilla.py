@@ -53,13 +53,11 @@ class Casilla(conexiondb):
 """
 if __name__ == '__main__':
     casilla = Casilla()
-    print(casilla.create_casilla("0001", "CALLE 1 NUMERO 12 CARMELO", 6))
-    print(casilla.create_casilla("0002", "CALLE 2 NUMERO 24 CARMELO", 6))
-    print(casilla.create_casilla("0003", "CALLE 3 NUMERO 36 CARMELO", 6))
-    print(casilla.create_casilla("0004", "CALLE 4 NUMERO 48 CARMELO", 6))
+    # print(casilla.create_casilla("0001", "x", 1))
+    print(casilla.create_casilla("0002", "x", 1))
+    print(casilla.create_casilla("0003", "x", 1))
+    print(casilla.create_casilla("0004", "x", 1))
 
-"""
 
     
-
-
+"""
